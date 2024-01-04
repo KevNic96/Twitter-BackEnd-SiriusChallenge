@@ -13,7 +13,7 @@ interface Socket extends IOSocket {
 
 const messageServ = new MessageServiceImpl(new MessageRepoImpl(db), new FollowerRepoImpl(db), new UserRepositoryImpl(db))
 
-export const io = new Server(server, { // Creación de instancoa del Servidor Socket.io
+export const io = new Server(server, { // Creación de instancia del Servidor Socket.io
     cors: {
         origin: Constants.CORS_WHITELIST, //Configuracion del servidor para permitir el acceso desde determinados origenes y metodos HTTP
         methods: ['GET', 'POST']
@@ -47,8 +47,8 @@ io.on('connection', async(socket:Socket)=>{ //El manejador de eventos se dispara
     socket.on('message', async(data): Promise<void> => { //El manejador de eventos que se dispara cuando un cliente envia un mensaje al servidor
         if(!socket.userId) return //Verifica si socket.userId esta definido, sino no se procesa el mensaje
         try{
-            const message = await messageServ.newMessage(socket.userId, data.to, data.content) //Se crea un nuevo mensaje.
-            io.emit('message', message) //Se emite el mensaje a todos os clientes conectados utilizando io.emit
+            const message = await messageServ.newMessage(socket.userId, data.to, data.content) //Se crea un nuevo mensaje
+            io.emit('message', message) //Se emite el mensaje a todos los clientes conectados utilizando io.emit
         } catch(err){
             Logger.error(err) //Se registra el error utilziando Logger.
         }

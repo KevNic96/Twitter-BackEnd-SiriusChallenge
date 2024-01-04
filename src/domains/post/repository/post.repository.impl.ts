@@ -58,12 +58,12 @@ export class PostRepositoryImpl implements PostRepository {
       where: {
         id: postId
       },
-      /*
+      
       include: {
         author: true,
         reactions: true
       }
-      */
+      
     })
     return (post != null) ? new ExtendedPostDTO(post) : null
   }

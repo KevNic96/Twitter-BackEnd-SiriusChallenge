@@ -94,7 +94,7 @@ export class PostServiceImpl implements PostService {
   }
 
   async removeQtyLikes (postId: string) : Promise <void>{
-    await this.repository.subtractQtyLikes(postId)
+    await this.repository.removeQtyLikes(postId)
   }
 
   async addQtyRetweets (postId: string) : Promise <void>{
@@ -102,7 +102,7 @@ export class PostServiceImpl implements PostService {
   }
 
   async removeQtyRetweets(postId: string):Promise <void>{
-    await this.repository.addQtyComments(postId)
+    await this.repository.removeQtyRetweets(postId)
   }
 
   async addQtyComments(postId: string) : Promise <void>{
@@ -110,7 +110,7 @@ export class PostServiceImpl implements PostService {
   }
 
   async removeQtyComments(postId: string):Promise <void>{
-    await this.repository.subtractQtyComments(postId)
+    await this.repository.removeQtyComments(postId)
   }
 
 

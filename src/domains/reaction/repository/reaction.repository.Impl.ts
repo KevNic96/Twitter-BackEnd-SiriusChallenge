@@ -1,4 +1,4 @@
-import { PrismaClient, ReactionType } from "@prisma/client"; //Migracion
+import { PrismaClient, ReactionType } from "@prisma/client";
 import { ReactionDTO } from "../dto";
 import { ReactionRepository } from "./reaction.repository";
 

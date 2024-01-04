@@ -26,15 +26,15 @@ export class CommentServiceImpl implements CommentService{
     }
 
     async deleteComment(userId: string, commentId: string): Promise<void>{
-        const comment = await this.commentRepo.getById(commentId)
+        const comment = await this.commentRepo.getByCommentId(commentId)
         if(!comment?.parentId) throw new NotFoundException('comment')
         if (comment.authorId!== userId) throw new ForbiddenException()
-        await this.postRepo.subtractQtyComments(comment?.parentId)
+        await this.postRepo.removeQtyComments(comment?.parentId)
         await this.commentRepo.delete(commentId)
     }
 
     async getComment(userId: string, commentId: string): Promise<PostDTO>{
-        const comment = await this.commentRepo.getById(commentId)
+        const comment = await this.commentRepo.getByCommentId(commentId)
         if(!comment) throw new NotFoundException('comment')
         const author = await this.userRepo.getById(comment.authorId)
         if(author?.isPrivate === true){

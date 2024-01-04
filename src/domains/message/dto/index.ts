@@ -20,7 +20,7 @@ export class MessageInputDTO{
         this.from = message.from
         this.to = message.to
     }
-    
+
     content: string
     from: string
     to: string

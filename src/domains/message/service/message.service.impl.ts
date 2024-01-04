@@ -17,7 +17,7 @@ export class MessageServiceImpl implements MessageService{
         const doesFollow = await this.followRepo.getById(userId,to)
         const doesFollowBack = await this.followRepo.getById(to, userId)
         if (!doesFollow || !doesFollowBack) throw new NotFoundException('Follow')
-        return await this.messageRepo.create({ content, from: userId, to})
+        return await this.messageRepo.create({content, from: userId, to})
     }
 
     async getChats (userId: string): Promise<UserViewDTO[]>{
@@ -34,7 +34,7 @@ export class MessageServiceImpl implements MessageService{
     async getSingleChat(userId: string, to: string): Promise <MessageDTO[]>{
         const receiver = await this.userRepo.getById(to)
         if(!receiver) throw new NotFoundException('user')
-        const messages = await this.messageRepo.getOneChat(userId, to)
+        const messages = await this.messageRepo.getSingleChat(userId, to)
         return messages
     }
 

@@ -2,7 +2,7 @@ import { NotFoundException, ValidationException } from "@utils";
 import { ReactionDTO } from "../dto";
 import { ReactionRepository } from "../repository";
 import { ReactionService } from "./reaction.service";
-import {ReactionType} from '@prisma/client' //Migracion 
+import {ReactionType} from '@prisma/client'
 import { PostRepository } from "@domains/post/repository";
 
 export class ReactionServiceImpl implements ReactionService{

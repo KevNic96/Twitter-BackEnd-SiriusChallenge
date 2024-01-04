@@ -15,7 +15,27 @@ export const messageRouter = Router()
 
 const service : MessageService = new MessageServiceImpl(new MessageRepoImpl(db), new FollowerRepoImpl(db), new UserRepositoryImpl(db))
 
-// Swagger
+/**
+ * @swagger
+ * /api/message/:receiver_id:
+ *  post:
+ *      security: Send messages
+ *      tags: [Messages]
+ *      parameters:
+ *          - in: path
+ *            name: receiver_id
+ *            schema:
+ *              type: string
+ *            required: true
+ *            description: The receiver id to send messages
+ *      responses:
+ *          200:
+ *              description: OK
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Message'
+ */
 
 messageRouter.post('/:to', async(req:Request, res:Response)=> {
     const {userId} = res.locals.context

@@ -1,5 +1,5 @@
 import { ReactionDTO } from "../dto";
-import {ReactionType} from '@prisma/client' //Migracion
+import {ReactionType} from '@prisma/client'
 
 export interface ReactionRepository{
     create: (userId: string, postId: string, type: ReactionType) => Promise <ReactionDTO>
