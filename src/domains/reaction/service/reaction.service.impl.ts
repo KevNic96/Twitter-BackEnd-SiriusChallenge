@@ -31,7 +31,7 @@ export class ReactionServiceImpl implements ReactionService{
         }
 
         if(type === ReactionType.LIKE) await this.postRepo.addQtyLikes(postId)
-        if(type === ReactionType.RETWEET) await this.postRepo.removeQtyRetweets(postId)
+        if(type === ReactionType.RETWEET) await this.postRepo.addQtyRetweets(postId)
         return await this.reactionRepo.create(userId,postId,type)
     }
 
