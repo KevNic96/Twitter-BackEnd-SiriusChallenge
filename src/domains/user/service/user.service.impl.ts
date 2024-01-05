@@ -62,12 +62,14 @@ export class UserServiceImpl implements UserService {
   }
 
   async setProfilePicture(userId: string, filetype: string): Promise <{presignedUrl: string, profilePictureUrl: string}>{
+    const BUCKET_NAME = 'twitter-bucket-challenge-sirius'
     const user = await this.userRepo.getById(userId)
     if(!user) throw new NotFoundException('user')
     const data = await generateS3Url(filetype)
-  const url = `https://${Constants.BUCKET_NAME}.s3.amazonaws.com/${data.filename}.jpeg`
-  await this.userRepo.setProfilePicture(userId, url)
-  return {presignedUrl: data.presignedUrl,profilePictureUrl:url}
+  // const url = `https://${Constants.BUCKET_NAME}.s3.amazonaws.com/${data.filename}.jpeg`
+    const url = `https://${BUCKET_NAME}.s3.amazonaws.com/${data.filename}.jpeg`
+    await this.userRepo.setProfilePicture(userId, url)
+    return {presignedUrl: data.presignedUrl,profilePictureUrl:url}
   }
 
   async getProfilePicture(userId: string): Promise<string|null>{

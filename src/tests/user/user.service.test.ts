@@ -1,11 +1,3 @@
-// import { describe, test } from '@jest/globals'
-// import { ExtendedUserDTO, UserViewDTO } from '../../../domains/user/dto'
-// import { UserRepository, UserRepositoryImpl } from '../../../domains/user/repository'
-// import { db } from '../../../utils'
-// import { UserService, UserServiceImpl } from '../../../domains/user/service'
-// import { NotFoundException } from '../../../utils/errors'
-// import { FollowerRepositoryImpl, FollowerRepository } from '@domains/follower/repository'
-
 import {describe, test} from '@jest/globals'
 import { ExtendedUserDTO, UserViewDTO } from '@domains/user/dto'
 import { UserRepository, UserRepositoryImpl } from '@domains/user/repository'

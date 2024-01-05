@@ -13,8 +13,8 @@ import {
 } from '../../utils'
 
 describe('AuthService', () => {
-  const userRepositoryMock: UserRepository = new UserRepositoryImpl(db)
-  const authService: AuthService = new AuthServiceImpl(userRepositoryMock)
+  const MockUserRepo: UserRepository = new UserRepositoryImpl(db)
+  const authService: AuthService = new AuthServiceImpl(MockUserRepo)
 
   const signupInput: SignupInputDTO = { email: 'example@gmail.com', username: 'Testusername', password: 'password', name: '' }
   const loginInput: LoginInputDTO = { email: 'example@gmail.com', password: 'password' }
@@ -29,18 +29,18 @@ describe('AuthService', () => {
     createdAt: new Date()
   }
 
-  test('signup() should return UserId and auth token', async () => {
-    jest.spyOn(userRepositoryMock, 'getByEmailOrUsername').mockImplementation(async () => await Promise.resolve(null))
-    jest.spyOn(userRepositoryMock, 'create').mockImplementation(async () => await Promise.resolve(extendedUser))
+  test('signup() Should return UserId and Auth Token', async () => {
+    jest.spyOn(MockUserRepo, 'getByEmailOrUsername').mockImplementation(async () => await Promise.resolve(null))
+    jest.spyOn(MockUserRepo, 'create').mockImplementation(async () => await Promise.resolve(extendedUser))
     jest.spyOn(authService, 'signup').mockImplementation(async () => await Promise.resolve({ userId: '1', token: 'token' }))
     const data = await authService.signup(signupInput)
     expect(data.token).toBeDefined()
     expect(data.userId).toBeDefined()
   })
 
-  test('signup() should throw a ConflictException when user already exists', async () => {
+  test('signup() Should throw a ConflictException when there is a user that already exists', async () => {
     jest
-      .spyOn(userRepositoryMock, 'getByEmailOrUsername')
+      .spyOn(MockUserRepo, 'getByEmailOrUsername')
       .mockImplementation(async () => await Promise.resolve(extendedUser))
     try {
       await authService.signup(signupInput)
@@ -49,8 +49,8 @@ describe('AuthService', () => {
     }
   })
 
-  test('signup() should throw a ValidationException when data is invalid', async () => {
-    jest.spyOn(userRepositoryMock, 'getByEmailOrUsername').mockImplementation(async () => await Promise.resolve(null))
+  test('signup() Should throw a ValidationException when data is invalid', async () => {
+    jest.spyOn(MockUserRepo, 'getByEmailOrUsername').mockImplementation(async () => await Promise.resolve(null))
 
     try {
       await authService.signup({ email: '', username: '', password: '', name: '' })
@@ -59,9 +59,9 @@ describe('AuthService', () => {
     }
   })
 
-  test('login() should return UserId and auth token', async () => {
+  test('login() Should return UserId and Auth Token', async () => {
     jest
-      .spyOn(userRepositoryMock, 'getByEmailOrUsername')
+      .spyOn(MockUserRepo, 'getByEmailOrUsername')
       .mockImplementation(async () => await Promise.resolve(extendedUser))
     jest.spyOn(authService, 'login').mockImplementation(async () => await Promise.resolve({ userId: '1', token: 'token' }))
     const data = await authService.login(loginInput)
@@ -69,8 +69,8 @@ describe('AuthService', () => {
     expect(data.userId).toBeDefined()
   })
 
-  test('login() should throw a NotFoundException when user does not exist', async () => {
-    jest.spyOn(userRepositoryMock, 'getByEmailOrUsername').mockImplementation(async () => await Promise.resolve(null))
+  test('login() Should throw a NotFoundException when user does not exist', async () => {
+    jest.spyOn(MockUserRepo, 'getByEmailOrUsername').mockImplementation(async () => await Promise.resolve(null))
 
     try {
       await authService.login(loginInput)
@@ -79,8 +79,8 @@ describe('AuthService', () => {
     }
   })
 
-  test('login() should throw a ValidationException when data is invalid', async () => {
-    jest.spyOn(userRepositoryMock, 'getByEmailOrUsername').mockImplementation(async () => await Promise.resolve(null))
+  test('login() Should throw a ValidationException when data is invalid', async () => {
+    jest.spyOn(MockUserRepo, 'getByEmailOrUsername').mockImplementation(async () => await Promise.resolve(null))
 
     try {
       await authService.login({ email: '', password: '' })
@@ -89,9 +89,9 @@ describe('AuthService', () => {
     }
   })
 
-  test('login() should throw a ValidationException when password is incorrect', async () => {
+  test('login() Should throw a UnauthorizedException when password is incorrect', async () => {
     jest
-      .spyOn(userRepositoryMock, 'getByEmailOrUsername')
+      .spyOn(MockUserRepo, 'getByEmailOrUsername')
       .mockImplementation(async () => await Promise.resolve(extendedUser))
     jest.fn(checkPassword).mockImplementation(async () => await Promise.resolve(false))
 

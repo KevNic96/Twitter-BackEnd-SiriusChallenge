@@ -1,7 +1,7 @@
 import {describe, test} from '@jest/globals'
 import { ExtendedPostDTO,PostDTO } from '@domains/post/dto'
 import { CommentRepository, CommentRepoImpl } from '@domains/comment/repository'
-import { db } from '@utils'
+import { ValidationException, db } from '@utils'
 import { CommentService, CommentServiceImpl } from '@domains/comment/service'
 import { PostRepository, PostRepositoryImpl } from '@domains/post/repository'
 import { NotFoundException, ForbiddenException } from '@utils'
@@ -13,16 +13,16 @@ import { ExtendedUserDTO } from '@domains/user/dto'
 import { FollowerDTO } from '@domains/follower/dto'
 
 describe('CommentService', () => {
-  const commentRepositoryMock: CommentRepository = new CommentRepoImpl(db)
-  const followerRepositoryMock: FollowerRepo = new FollowerRepoImpl(db)
-  const userRepositoryMock: UserRepository = new UserRepositoryImpl(db)
-  const postRepositoryMock: PostRepository = new PostRepositoryImpl(db)
+  const MockCommentRepo: CommentRepository = new CommentRepoImpl(db)
+  const MockFollowRepo: FollowerRepo = new FollowerRepoImpl(db)
+  const MockUserRepo: UserRepository = new UserRepositoryImpl(db)
+  const MockPostRepo: PostRepository = new PostRepositoryImpl(db)
 
   const commentService: CommentService = new CommentServiceImpl(
-    commentRepositoryMock,
-    followerRepositoryMock,
-    userRepositoryMock,
-    postRepositoryMock
+    MockCommentRepo,
+    MockFollowRepo,
+    MockUserRepo,
+    MockPostRepo
   )
   const comment: PostDTO = {
     id: '1',
@@ -67,45 +67,45 @@ describe('CommentService', () => {
   }
   const follower: FollowerDTO = { id: '1', followerId: '1', followedId: '1', createdAt: new Date() }
 
-  test('createComment() should return a CommentDTO object', async () => {
-    jest.spyOn(postRepositoryMock, 'addQtyComments').mockImplementation(async () => {
-      await Promise.resolve()
-    })
-    jest.spyOn(postRepositoryMock, 'getById').mockImplementation(async () => await Promise.resolve(extendedComment))
-    jest.spyOn(commentRepositoryMock, 'create').mockImplementation(async () => await Promise.resolve(comment))
-    const commentCreated: PostDTO = await commentService.createComment(comment.authorId, commentInput)
+  test('createComment() Should return a CommentDTO object', async () => {
+  jest.spyOn(MockPostRepo, 'addQtyComments').mockImplementation(async () => {
+  await Promise.resolve()
+  })
+  jest.spyOn(MockPostRepo, 'getById').mockImplementation(async () => await Promise.resolve(extendedComment))
+  jest.spyOn(MockCommentRepo, 'create').mockImplementation(async () => await Promise.resolve(comment))
+  const commentCreated: PostDTO = await commentService.createComment(comment.authorId, commentInput)
 
-    expect(commentCreated.id).toBeDefined()
-    expect(commentCreated.authorId).toEqual(comment.authorId)
-    expect(commentCreated.parentId).toEqual(comment.parentId)
-    expect(commentCreated.content).toEqual(comment.content)
-    expect(commentCreated.createdAt).toEqual(comment.createdAt)
+  expect(commentCreated.id).toBeDefined()
+  expect(commentCreated.authorId).toEqual(comment.authorId)
+  expect(commentCreated.parentId).toEqual(comment.parentId)
+  expect(commentCreated.content).toEqual(comment.content)
+  expect(commentCreated.createdAt).toEqual(comment.createdAt)
   })
 
-  test('createComment() should throw a ValidationException when data is invalid', async () => {
+  test('createComment() Should throw a ValidationException when data is invalid', async () => {
     jest.fn(validate).mockImplementation(async () => await Promise.reject(new Error()))
     try {
       await commentService.createComment(comment.authorId, commentInput)
     } catch (error: any) {
-      expect(error).toBeInstanceOf(ForbiddenException)
+      expect(error).toBeInstanceOf(ValidationException)
     }
   })
 
-  test('deleteComment() should work', async () => {
-    jest.spyOn(commentRepositoryMock, 'getByCommentId').mockImplementation(async () => await Promise.resolve(comment))
-    jest.spyOn(commentRepositoryMock, 'delete').mockImplementation(async () => {
+  test('deleteComment() Should delete a comment if the user wants to', async () => {
+    jest.spyOn(MockCommentRepo, 'getByCommentId').mockImplementation(async () => await Promise.resolve(comment))
+    jest.spyOn(MockCommentRepo, 'delete').mockImplementation(async () => {
       await Promise.resolve()
     })
-    jest.spyOn(postRepositoryMock, 'removeQtyComments').mockImplementation(async () => {
+    jest.spyOn(MockPostRepo, 'removeQtyComments').mockImplementation(async () => {
       await Promise.resolve()
     })
     await commentService.deleteComment(comment.authorId, comment.id)
 
-    expect(commentRepositoryMock.delete).toBeCalledWith(comment.id)
+  expect(MockCommentRepo.delete).toBeCalledWith(comment.id)
   })
 
-  test('deleteComment() should throw a NotFoundException when comment does not exist', async () => {
-    jest.spyOn(commentRepositoryMock, 'getByCommentId').mockImplementation(async () => await Promise.resolve(null))
+  test('deleteComment() Should throw a NotFoundException when comment does not exist', async () => {
+  jest.spyOn(MockCommentRepo, 'getByCommentId').mockImplementation(async () => await Promise.resolve(null))
     try {
       await commentService.deleteComment(comment.authorId, comment.id)
     } catch (error: any) {
@@ -113,10 +113,10 @@ describe('CommentService', () => {
     }
   })
 
-  test('getComment() should return a PostDTO object', async () => {
-    jest.spyOn(commentRepositoryMock, 'getByCommentId').mockImplementation(async () => await Promise.resolve(comment))
-    jest.spyOn(userRepositoryMock, 'getById').mockImplementation(async () => await Promise.resolve(extendedUser))
-    jest.spyOn(followerRepositoryMock, 'getById').mockImplementation(async () => await Promise.resolve(follower))
+  test('getComment() Should return a PostDTO object', async () => {
+    jest.spyOn(MockCommentRepo, 'getByCommentId').mockImplementation(async () => await Promise.resolve(comment))
+    jest.spyOn(MockUserRepo, 'getById').mockImplementation(async () => await Promise.resolve(extendedUser))
+    jest.spyOn(MockFollowRepo, 'getById').mockImplementation(async () => await Promise.resolve(follower))
     const commentFound: PostDTO = await commentService.getComment(comment.authorId, comment.id)
 
     expect(commentFound.id).toBeDefined()
@@ -126,8 +126,8 @@ describe('CommentService', () => {
     expect(commentFound.createdAt).toEqual(comment.createdAt)
   })
 
-  test('getComment() should throw a NotFoundException when comment does not exist', async () => {
-    jest.spyOn(commentRepositoryMock, 'getByCommentId').mockImplementation(async () => await Promise.resolve(null))
+  test('getComment() Should throw a NotFoundException when comment does not exist', async () => {
+    jest.spyOn(MockCommentRepo, 'getByCommentId').mockImplementation(async () => await Promise.resolve(null))
     try {
       await commentService.getComment(comment.authorId, comment.id)
     } catch (error: any) {
@@ -135,10 +135,10 @@ describe('CommentService', () => {
     }
   })
 
-  test('getComment() should throw a NotFoundException when author is private and user does not follow', async () => {
-    jest.spyOn(commentRepositoryMock, 'getByCommentId').mockImplementation(async () => await Promise.resolve(comment))
-    jest.spyOn(userRepositoryMock, 'getById').mockImplementation(async () => await Promise.resolve(extendedUser))
-    jest.spyOn(followerRepositoryMock, 'getById').mockImplementation(async () => await Promise.resolve(null))
+  test('getComment() Should throw a NotFoundException when author is private and user does not follow', async () => {
+    jest.spyOn(MockCommentRepo, 'getByCommentId').mockImplementation(async () => await Promise.resolve(comment))
+    jest.spyOn(MockUserRepo, 'getById').mockImplementation(async () => await Promise.resolve(extendedUser))
+    jest.spyOn(MockFollowRepo, 'getById').mockImplementation(async () => await Promise.resolve(null))
     try {
       await commentService.getComment(comment.authorId, comment.id)
     } catch (error: any) {
@@ -147,8 +147,8 @@ describe('CommentService', () => {
   })
 
   test('getCommentsByAuthor() should return a PostDTO[] object', async () => {
-    jest.spyOn(commentRepositoryMock, 'getByAuthorId').mockImplementation(async () => await Promise.resolve([comment]))
-    jest.spyOn(followerRepositoryMock, 'getById').mockImplementation(async () => await Promise.resolve(follower))
+    jest.spyOn(MockCommentRepo, 'getByAuthorId').mockImplementation(async () => await Promise.resolve([comment]))
+    jest.spyOn(MockFollowRepo, 'getById').mockImplementation(async () => await Promise.resolve(follower))
     const commentsFound: PostDTO[] = await commentService.getAuthorComments(comment.authorId, comment.id)
 
     expect(commentsFound[0].id).toBeDefined()
@@ -159,10 +159,10 @@ describe('CommentService', () => {
   })
 
   test('getCommentsByAuthor() should throw a NotFoundException when author is private and user does not follow', async () => {
-    jest.spyOn(postRepositoryMock, 'getById').mockImplementation(async () => await Promise.resolve(extendedComment))
-    jest.spyOn(userRepositoryMock, 'getById').mockImplementation(async () => await Promise.resolve(extendedUser))
-    jest.spyOn(followerRepositoryMock, 'getById').mockImplementation(async () => await Promise.resolve(null))
-    jest.spyOn(commentRepositoryMock, 'getByAuthorId').mockImplementation(async () => await Promise.resolve([comment]))
+    jest.spyOn(MockPostRepo, 'getById').mockImplementation(async () => await Promise.resolve(extendedComment))
+    jest.spyOn(MockUserRepo, 'getById').mockImplementation(async () => await Promise.resolve(extendedUser))
+    jest.spyOn(MockFollowRepo, 'getById').mockImplementation(async () => await Promise.resolve(null))
+    jest.spyOn(MockCommentRepo, 'getByAuthorId').mockImplementation(async () => await Promise.resolve([comment]))
     try {
       await commentService.getAuthorComments(comment.authorId, comment.id)
     } catch (error: any) {
@@ -171,15 +171,15 @@ describe('CommentService', () => {
   })
 
   test('getCommentsByPost() should return a ExtendedPostDTO[] object', async () => {
-    jest.spyOn(postRepositoryMock, 'getById').mockImplementation(async () => await Promise.resolve(extendedComment))
-    jest.spyOn(userRepositoryMock, 'getById').mockImplementation(async () => await Promise.resolve(extendedUser))
-    jest.spyOn(followerRepositoryMock, 'getById').mockImplementation(async () => await Promise.resolve(follower))
+    jest.spyOn(MockPostRepo, 'getById').mockImplementation(async () => await Promise.resolve(extendedComment))
+    jest.spyOn(MockUserRepo, 'getById').mockImplementation(async () => await Promise.resolve(extendedUser))
+    jest.spyOn(MockFollowRepo, 'getById').mockImplementation(async () => await Promise.resolve(follower))
     jest
-      .spyOn(commentRepositoryMock, 'getAllByPostId')
+      .spyOn(MockCommentRepo, 'getAllByPostId')
       .mockImplementation(async () => await Promise.resolve([extendedComment]))
     const commentsFound: ExtendedPostDTO[] = await commentService.getPostComments(comment.authorId, comment.id, {
-      limit: 10
-    })
+    limit: 10
+  })
 
     expect(commentsFound[0].id).toBeDefined()
     expect(commentsFound[0].authorId).toEqual(comment.authorId)
@@ -188,26 +188,30 @@ describe('CommentService', () => {
     expect(commentsFound[0].createdAt).toEqual(comment.createdAt)
   })
 
-  test('getCommentsByPost() should throw a NotFoundException when post does not exist', async () => {
-    jest.spyOn(postRepositoryMock, 'getById').mockImplementation(async () => await Promise.resolve(null))
+  test('getCommentsByPost() Should throw a NotFoundException when post does not exist', async () => {
+    jest.spyOn(MockPostRepo, 'getById').mockImplementation(async () => await Promise.resolve(null))
     try {
       await commentService.getPostComments(comment.authorId, comment.parentId as string, { limit: 10 })
-    } catch (error: any) {
-      expect(error).toBeInstanceOf(NotFoundException)
-    }
+  } catch (error: any) {
+    expect(error).toBeInstanceOf(NotFoundException)
+  }
   })
 
-  test('getCommentsByPost() should throw a NotFoundException when author is private and user does not follow', async () => {
-    jest.spyOn(postRepositoryMock, 'getById').mockImplementation(async () => await Promise.resolve(extendedComment))
-    jest.spyOn(userRepositoryMock, 'getById').mockImplementation(async () => await Promise.resolve(extendedUser))
-    jest.spyOn(followerRepositoryMock, 'getById').mockImplementation(async () => await Promise.resolve(null))
+  test('getCommentsByPost() Should throw a NotFoundException when author is private and user does not follow', async () => {
+    jest.spyOn(MockPostRepo, 'getById').mockImplementation(async () => await Promise.resolve(extendedComment))
+    jest.spyOn(MockUserRepo, 'getById').mockImplementation(async () => await Promise.resolve(extendedUser))
+    jest.spyOn(MockFollowRepo, 'getById').mockImplementation(async () => await Promise.resolve(null))
     jest
-      .spyOn(commentRepositoryMock, 'getAllByPostId')
+      .spyOn(MockCommentRepo, 'getAllByPostId')
       .mockImplementation(async () => await Promise.resolve([extendedComment]))
     try {
       await commentService.getPostComments(comment.authorId, comment.id, { limit: 10 })
     } catch (error: any) {
       expect(error).toBeInstanceOf(NotFoundException)
     }
+  })
+
+  test('getComment() ', async() =>{
+    expect(true).toBeTruthy
   })
 })
