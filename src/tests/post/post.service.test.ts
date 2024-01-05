@@ -1,12 +1,3 @@
-// import { describe, test } from '@jest/globals'
-// import { CreatePostInputDTO, PostDTO, ExtendedPostDTO } from '../../../domains/post/dto'
-// import { db } from '../../../utils'
-// import { PostService, PostServiceImpl } from '../../../domains/post/service'
-// import { PostRepository, PostRepositoryImpl } from '../../../domains/post/repository'
-// import { FollowerRepository, FollowerRepositoryImpl } from '../../../domains/follower/repository'
-// import { UserRepository, UserRepositoryImpl } from '../../../domains/user/repository'
-// import { NotFoundException, ValidationException } from '../../../utils/errors'
-// import { FollowerDTO } from '@domains/follower/dto'
 import {describe, test} from '@jest/globals'
 import { CreatePostInputDTO, PostDTO, ExtendedPostDTO } from '@domains/post/dto'
 import { db } from '@utils'
@@ -17,9 +8,12 @@ import { FollowerRepoImpl } from '@domains/follower/repository'
 import { UserRepository,UserRepositoryImpl } from '@domains/user/repository'
 import { NotFoundException, ValidationException } from '@utils'
 import { FollowerDTO } from '@domains/follower/dto'
+import { MockPostRepo } from './MockPostRepo'
+import { MockS3Repo } from './MockS3'
 
 describe('PostService', () => {
-  const postRepositoryMock: PostRepository = new PostRepositoryImpl(db)
+  const postRepositoryMock: PostRepository = new MockPostRepo()
+  const s3RepositoryMock = new MockS3Repo();
   const followerRepositoryMock: FollowerRepo = new FollowerRepoImpl(db)
   const userRepositoryMock: UserRepository = new UserRepositoryImpl(db)
   const postService: PostService = new PostServiceImpl(postRepositoryMock, followerRepositoryMock, userRepositoryMock)
@@ -50,7 +44,7 @@ describe('PostService', () => {
   const createPost: CreatePostInputDTO = { content: 'content', images: [] }
   const follower: FollowerDTO = { followerId: '2', followedId: post.authorId, id: '1', createdAt: new Date() }
 
-  test('createPost() should return a PostDTO object', async () => {
+  test('createPost() Should return a PostDTO object', async () => {
     jest.spyOn(postRepositoryMock, 'create').mockImplementation(async () => await Promise.resolve(post))
     const postCreated: PostDTO = await postService.createPost(post.authorId, createPost)
 
@@ -61,7 +55,7 @@ describe('PostService', () => {
     expect(postCreated.parentId).toEqual(post.parentId)
   })
 
-  test('createPost() should throw a ValidationException when content is empty', async () => {
+  test('createPost() Should throw a ValidationException when content is empty', async () => {
     try {
       await postService.createPost(post.authorId, { content: '', images: [] })
     } catch (error: any) {
@@ -69,7 +63,7 @@ describe('PostService', () => {
     }
   })
 
-  test('deletePost() should work', async () => {
+  test('deletePost() Should work', async () => {
     jest.spyOn(postRepositoryMock, 'getById').mockImplementation(async () => await Promise.resolve(post))
     jest.spyOn(postRepositoryMock, 'delete').mockImplementation(async () => {
       await Promise.resolve()
@@ -78,7 +72,7 @@ describe('PostService', () => {
     expect(postRepositoryMock.delete).toBeCalledWith(post.id)
   })
 
-  test('deletePost() should throw a NotFoundException when post does not exist', async () => {
+  test('deletePost() Should throw a NotFoundException when post does not exist', async () => {
     jest.spyOn(postRepositoryMock, 'getById').mockImplementation(async () => await Promise.resolve(null))
     try {
       await postService.deletePost(post.authorId, post.id)
@@ -99,7 +93,7 @@ describe('PostService', () => {
     expect(postFound.parentId).toEqual(post.parentId)
   })
 
-  test('getPost() should throw a NotFoundException when author is private and user does not follow them', async () => {
+  test('getPost() Should throw a NotFoundException when author is private and user does not follow them', async () => {
     jest.spyOn(postRepositoryMock, 'getById').mockImplementation(async () => await Promise.resolve(post))
     jest
       .spyOn(userRepositoryMock, 'getById')
@@ -112,7 +106,7 @@ describe('PostService', () => {
     }
   })
 
-  test('getPost() should throw a NotFoundException when post does not exist', async () => {
+  test('getPost() Should throw a NotFoundException when post does not exist', async () => {
     jest.spyOn(postRepositoryMock, 'getById').mockImplementation(async () => await Promise.resolve(null))
     try {
       await postService.getPost(post.authorId, post.id)
@@ -121,7 +115,7 @@ describe('PostService', () => {
     }
   })
 
-  test('getLatestPosts() should return a PostDTO object', async () => {
+  test('getLatestPosts() Should return a PostDTO object', async () => {
     jest
       .spyOn(postRepositoryMock, 'getAllByDatePaginated')
       .mockImplementation(async () => await Promise.resolve([post]))
@@ -135,7 +129,7 @@ describe('PostService', () => {
     expect(postsFound[0].parentId).toEqual(post.parentId)
   })
 
-  test('getLatestPosts() should return an empty array when user does not follow anyone', async () => {
+  test('getLatestPosts() Should return an empty array when user does not follow anyone', async () => {
     jest.spyOn(postRepositoryMock, 'getAllByDatePaginated').mockImplementation(async () => await Promise.resolve([]))
     jest.spyOn(followerRepositoryMock, 'getById').mockImplementation(async () => await Promise.resolve(null))
 
@@ -143,7 +137,7 @@ describe('PostService', () => {
     expect(postsFound).toEqual([])
   })
 
-  test('getPostsByAuthor() should return a PostDTO object', async () => {
+  test('getPostsByAuthor() Should return a PostDTO object', async () => {
     jest.spyOn(userRepositoryMock, 'getById').mockImplementation(async () => await Promise.resolve(author))
     jest.spyOn(postRepositoryMock, 'getByAuthorId').mockImplementation(async () => await Promise.resolve([post]))
     const postsFound = await postService.getAuthorPosts('2', post.authorId)
@@ -155,7 +149,7 @@ describe('PostService', () => {
     expect(postsFound[0].parentId).toEqual(post.parentId)
   })
 
-  test('getPostsByAuthor() should throw a NotFoundException when author does not exist', async () => {
+  test('getPostsByAuthor() Should throw a NotFoundException when author does not exist', async () => {
     jest.spyOn(userRepositoryMock, 'getById').mockImplementation(async () => await Promise.resolve(null))
     try {
       await postService.getAuthorPosts('2', post.authorId)
@@ -164,7 +158,7 @@ describe('PostService', () => {
     }
   })
 
-  test('getPostsByAuthor() should throw a NotFoundException when author is private and user does not follow them', async () => {
+  test('getPostsByAuthor() Should throw a NotFoundException when author is private and user does not follow them', async () => {
     jest
       .spyOn(userRepositoryMock, 'getById')
       .mockImplementation(async () => await Promise.resolve({ ...author, isPrivate: true }))
@@ -176,7 +170,7 @@ describe('PostService', () => {
     }
   })
 
-  test('getPostsByAuthor() should return a PostDTO object when author is private and user follows them', async () => {
+  test('getPostsByAuthor() Should return a PostDTO object when author is private and user follows them', async () => {
     jest
       .spyOn(userRepositoryMock, 'getById')
       .mockImplementation(async () => await Promise.resolve({ ...author, isPrivate: true }))
@@ -192,13 +186,16 @@ describe('PostService', () => {
   })
 
   /////////
-  test('setPostImage() should return a presignedUrl and filename', async () => {
-    const presignedData = await postService.setPostImage("")
+  test('setPostImage() Should return a presignedUrl and filename', async () => {
+    jest.spyOn(s3RepositoryMock, 'createPresignedPost').mockImplementation(async () =>{
+      return { url: 'mocked-presigned-url', fields: {Key: 'mocked-filename'}}
+    })
+    const presignedData = await postService.setPostImage('')
     expect(presignedData.presignedUrl).toBeDefined()
     expect(presignedData.fileUrl).toBeDefined()
   })
 
-  test('addQtyLikes() should work', async () => {
+  test('addQtyLikes() Should work', async () => {
     jest.spyOn(postRepositoryMock, 'addQtyLikes').mockImplementation(async () => {
       await Promise.resolve()
     })
@@ -206,7 +203,7 @@ describe('PostService', () => {
     expect(postRepositoryMock.addQtyLikes).toBeCalledWith(post.id)
   })
 
-  test('subtractQtyLikes() should work', async () => {
+  test('removeQtyLikes() Should work', async () => {
     jest.spyOn(postRepositoryMock, 'removeQtyLikes').mockImplementation(async () => {
       await Promise.resolve()
     })
@@ -214,7 +211,7 @@ describe('PostService', () => {
     expect(postRepositoryMock.removeQtyLikes).toBeCalledWith(post.id)
   })
 
-  test('addQtyRetweets() should work', async () => {
+  test('addQtyRetweets() Should work', async () => {
     jest.spyOn(postRepositoryMock, 'addQtyRetweets').mockImplementation(async () => {
       await Promise.resolve()
     })
@@ -222,7 +219,7 @@ describe('PostService', () => {
     expect(postRepositoryMock.addQtyRetweets).toBeCalledWith(post.id)
   })
 
-  test('subtractQtyRetweets() should work', async () => {
+  test('removeQtyRetweets() Should work', async () => {
     jest.spyOn(postRepositoryMock, 'removeQtyRetweets').mockImplementation(async () => {
       await Promise.resolve()
     })
@@ -230,7 +227,7 @@ describe('PostService', () => {
     expect(postRepositoryMock.removeQtyRetweets).toBeCalledWith(post.id)
   })
 
-  test('addQtyComments() should work', async () => {
+  test('addQtyComments() Should work', async () => {
     jest.spyOn(postRepositoryMock, 'addQtyComments').mockImplementation(async () => {
       await Promise.resolve()
     })
@@ -238,7 +235,7 @@ describe('PostService', () => {
     expect(postRepositoryMock.addQtyComments).toBeCalledWith(post.id)
   })
 
-  test('subtractQtyComments() should work', async () => {
+  test('removeQtyComments() Should work', async () => {
     jest.spyOn(postRepositoryMock, 'removeQtyComments').mockImplementation(async () => {
       await Promise.resolve()
     })

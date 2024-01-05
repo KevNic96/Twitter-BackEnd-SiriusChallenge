@@ -85,51 +85,6 @@ const service: CommentService = new CommentServiceImpl(new CommentRepoImpl(db), 
 
 /**
  * @swagger
- * tags:
- *  name: Comment
- *  description: These endpoints let you comment posts.
- * /api/comment/{postId}:
- *  get:
- *      summary: Get comments by post ID.
- *      tags: [Comment]
- *      parameters:
- *          - in: path
- *            name: post_id
- *            schema:
- *              type: string
- *            required: true
- *            description: The post id.
- *            example: abcdefghij12345678
- *      responses:
- *          200:
- *              description: OK
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/comments/schemas/Post'
- *          404:
- *              description: Post not found.
- *               content:
- *                   application/json:
- *                       schema:
- *                           $ref: '#/components/responses/NotFoundException'
- *          500:
- *              description: Some server error.
- * }            example: Server error.
- */
-
-commentRouter.get('/:postId', async(req:Request,res:Response) => {
-    const {userId} = res.locals.context
-    const {postId} = req.params
-    const {limit,before,after} = req.query as Record<string,string>
-
-    const comments = await service.getPostComments(userId, postId, {limit:Number(limit), before, after})
-
-    return res.status(HttpStatus.OK).json(comments)
-})
-
-/**
- * @swagger
  * /api/comment/by_user/:user_id:
  *  get:
  *      security:
@@ -264,4 +219,49 @@ commentRouter.delete('/:commentId', async(req:Request, res:Response)=>{
     await service.deleteComment(userId, commentId)
 
     return res.status(HttpStatus.OK).send({message: `Deleted comment ${commentId}`})
+})
+
+/**
+ * @swagger
+ * tags:
+ *  name: Comment
+ *  description: These endpoints let you comment posts.
+ * /api/comment/{postId}:
+ *  get:
+ *      summary: Get comments by post ID.
+ *      tags: [Comment]
+ *      parameters:
+ *          - in: path
+ *            name: post_id
+ *            schema:
+ *              type: string
+ *            required: true
+ *            description: The post id.
+ *            example: abcdefghij12345678
+ *      responses:
+ *          200:
+ *              description: OK
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/comments/schemas/Post'
+ *          404:
+ *              description: Post not found.
+ *               content:
+ *                   application/json:
+ *                       schema:
+ *                           $ref: '#/components/responses/NotFoundException'
+ *          500:
+ *              description: Some server error.
+ * }            example: Server error.
+ */
+
+commentRouter.get('/:postId', async(req:Request,res:Response) => {
+    const {userId} = res.locals.context
+    const {postId} = req.params
+    const {limit,before,after} = req.query as Record<string,string>
+
+    const comments = await service.getPostComments(userId, postId, {limit:Number(limit), before, after})
+
+    return res.status(HttpStatus.OK).json(comments)
 })
