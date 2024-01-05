@@ -13,13 +13,13 @@ export class UserRepositoryImpl implements UserRepository {
     }).then((user: UserDTO) => new UserDTO(user))
   }
 
-  async getById (userId: any): Promise<UserDTO | null> {
+  async getById (userId: any): Promise<ExtendedUserDTO | null> {
     const user = await this.db.user.findUnique({
       where: {
         id: userId
       }
     })
-    return user ? new UserDTO(user) : null
+    return user ? new ExtendedUserDTO(user) : null
   }
 
   async delete (userId: any): Promise<void> {

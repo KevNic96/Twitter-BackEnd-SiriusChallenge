@@ -2,6 +2,7 @@ import { IsEmail, IsNotEmpty, IsOptional, IsString, IsStrongPassword } from 'cla
 
 export class TokenDTO {
   token!: string
+  userId!: string
 }
 
 export class SignupInputDTO {

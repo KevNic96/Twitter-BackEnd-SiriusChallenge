@@ -11,7 +11,7 @@ import { FollowerRepo } from '@domains/follower/repository'
 export class UserServiceImpl implements UserService {
   constructor (private readonly userRepo: UserRepository, private readonly followRepo: FollowerRepo) {}
 
-  async getUser (userId: any): Promise<UserDTO> {
+  async getUser (userId: string): Promise<ExtendedUserDTO> {
     const user = await this.userRepo.getById(userId)
     if (!user) throw new NotFoundException('user')
     return user

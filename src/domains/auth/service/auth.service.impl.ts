@@ -17,7 +17,7 @@ export class AuthServiceImpl implements AuthService {
     const user = await this.userRepo.create({ ...data, password: encryptedPassword }) //Crea un nuevo usuario en la base de datos utilizando el repositorio y la contraseña encriptada.
     const token = generateAccessToken({ userId: user.id }) //Genera un token de acceso utilizando la funcion
 
-    return { token } //Retorna un objeto 'TokenDTO' con el token generado
+    return { userId: user.id, token } //Retorna un objeto 'TokenDTO' con el token generado
   }
 
   async login (data: LoginInputDTO): Promise<{userId: string, token: string}> {
