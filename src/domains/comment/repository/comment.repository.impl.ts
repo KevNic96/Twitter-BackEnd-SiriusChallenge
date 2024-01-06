@@ -28,7 +28,7 @@ export class CommentRepoImpl implements CommentRepository{
                 author: true,
                 reactions:true
             },
-            cursor: options.after ? {id: options.after}:options.before ? {id:options.before}:undefined,
+            cursor: options.after ? {id: options.after} : options.before ? {id:options.before} : undefined,
             skip: options.after ?? options.before ? 1 : undefined,
             take: options.limit ? (options.before ? -options.limit : options.limit) : undefined,
             orderBy: [
@@ -40,7 +40,7 @@ export class CommentRepoImpl implements CommentRepository{
                 }
             ]
         })
-        return comments.map((comment: ExtendedPostDTO) => new ExtendedPostDTO(comment))
+        return comments.map((comment: ExtendedPostDTO) => new ExtendedPostDTO(comment)) // Puede ser esto el error?
     }
 
     async delete (commentId: string): Promise <void>{

@@ -30,6 +30,7 @@ export class MockPostRepo implements PostRepository {
       images: data.images || [],
       parentId: null,
       author: this.generateMockAuthor(), // Puedes personalizar la simulación de autor según sea necesario
+      reactions: [],
       isComment: false,
       qtyComments: 0,
       qtyLikes: 0,

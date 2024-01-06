@@ -28,7 +28,7 @@ export class PostDTO {
   content: string
   images: string[]
   createdAt: Date
-  parentId: string| null 
+  parentId: string| null
 }
 
 export class ExtendedPostDTO extends PostDTO {
@@ -39,10 +39,10 @@ export class ExtendedPostDTO extends PostDTO {
     this.qtyComments = post.qtyComments
     this.qtyLikes = post.qtyLikes
     this.qtyRetweets = post.qtyRetweets
-    // this.reactions = post.reactions
+    this.reactions = post.reactions
   }
 
-  // reactions: ReactionDTO[]
+  reactions: ReactionDTO[]
   author!: ExtendedUserDTO
   isComment!: boolean
   qtyComments!: number

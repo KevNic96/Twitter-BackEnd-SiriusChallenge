@@ -3,7 +3,6 @@ import { PrismaClient } from '@prisma/client'
 import { OffsetPagination } from '@types'
 import { ExtendedUserDTO, UserDTO, UserViewDTO } from '../dto'
 import { UserRepository } from './user.repository'
-
 export class UserRepositoryImpl implements UserRepository {
   constructor (private readonly db: PrismaClient) {}
 
@@ -13,7 +12,7 @@ export class UserRepositoryImpl implements UserRepository {
     }).then((user: UserDTO) => new UserDTO(user))
   }
 
-  async getById (userId: any): Promise<ExtendedUserDTO | null> {
+  async getById (userId: string): Promise<ExtendedUserDTO | null> {
     const user = await this.db.user.findUnique({
       where: {
         id: userId
@@ -149,6 +148,7 @@ export class UserRepositoryImpl implements UserRepository {
   }
 
   async setProfilePicture(userId: string, profilePicture: string): Promise <void>{
+    //Simula la subida de la imagen a S3(usando el mock)
     await this.db.user.update({
       where: {
         id: userId

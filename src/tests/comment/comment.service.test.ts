@@ -49,6 +49,7 @@ describe('CommentService', () => {
       profilePicture: 'profilePictureUrl',
       createdAt: new Date()
     },
+    reactions: [],
     isComment: true,
     qtyComments: 0,
     qtyLikes: 0,

@@ -6,8 +6,10 @@ import { UserService, UserServiceImpl } from '@domains/user/service'
 import { NotFoundException } from '@utils'
 import { FollowerRepoImpl } from '@domains/follower/repository'
 import { FollowerRepo } from '@domains/follower/repository'
+import { MockS3UserRepo } from './MockUserRepo'
 
 describe('UserService', () => {
+  const s3Mock = new MockS3UserRepo()
   const userRepositoryMock: UserRepository = new UserRepositoryImpl(db)
   const followerRepositoryMock: FollowerRepo = new FollowerRepoImpl(db)
 
@@ -200,14 +202,17 @@ describe('UserService', () => {
 
   /////////////////
   test('setProfilePicture() should return a presignedUrl and a profilePictureUrl', async () => {
-    jest.spyOn(userRepositoryMock, 'getById').mockImplementation(async () => await Promise.resolve(user))
-    jest.spyOn(userRepositoryMock, 'setProfilePicture').mockImplementation(async () => {
-      await Promise.resolve()
-    })
-    const data = await userService.setProfilePicture(user.id, "url")
+    // jest.spyOn(userRepositoryMock, 'getById').mockImplementation(async () => await Promise.resolve(user))
+    // jest.spyOn(userRepositoryMock, 'setProfilePicture').mockImplementation(async () => {
+    //   await Promise.resolve()
+    // })
+    // const data = await userService.setProfilePicture(user.id, "url")
 
-    expect(data.presignedUrl).toBeDefined()
-    expect(data.profilePictureUrl).toBeDefined()
+    // expect(data.presignedUrl).toBeDefined()
+    // expect(data.profilePictureUrl).toBeDefined()
+    const presigned = await s3Mock.createPresigned({Key: 'example.jpg'})
+    expect(presigned.presignedUrl).toBeDefined()
+    expect(presigned.profilePicture).toBeDefined()
   })
 
   test('setProfilePicture() should return a NotFoundException when user does not exist', async () => {

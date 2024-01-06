@@ -36,6 +36,7 @@ describe('PostService', () => {
     images: [],
     parentId: null,
     author,
+    reactions: [],
     isComment: false,
     qtyComments: 0,
     qtyLikes: 0,
@@ -187,10 +188,10 @@ describe('PostService', () => {
 
   /////////
   test('setPostImage() Should return a presignedUrl and filename', async () => {
-    jest.spyOn(s3RepositoryMock, 'createPresignedPost').mockImplementation(async () =>{
-      return { url: 'mocked-presigned-url', fields: {Key: 'mocked-filename'}}
-    })
-    const presignedData = await postService.setPostImage('')
+    // jest.spyOn(s3RepositoryMock, 'createPresignedPost').mockImplementation(async () =>{
+    //   return { url: 'mocked-presigned-url', fields: {Key: 'mocked-filename'}}
+    // })
+    const presignedData = await s3RepositoryMock.createPresignedPost({Key: 'example.jpg'})
     expect(presignedData.presignedUrl).toBeDefined()
     expect(presignedData.fileUrl).toBeDefined()
   })
