@@ -18,6 +18,7 @@ export class UserRepositoryImpl implements UserRepository {
         id: userId
       }
     })
+    console.log(user)
     return user ? new ExtendedUserDTO(user) : null
   }
 

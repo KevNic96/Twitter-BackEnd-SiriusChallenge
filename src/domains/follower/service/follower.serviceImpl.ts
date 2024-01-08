@@ -10,6 +10,7 @@ export class FollowerServiceImpl implements FollowerService{
     constructor (private readonly followRepo: FollowerRepo, private readonly userRepo: UserRepository){}
 
     async FollowUp(followerId: string, followedId: string): Promise <FollowerDTO>{
+        // console.log(followerId,followedId)
         if(followerId === followedId) throw new ForbiddenException() // verifica si son iguales
         if(await this.followRepo.getById(followerId,followedId)) throw new ForbiddenException() //verifica si ya existe un seguimimento
         const follower = await this.userRepo.getById(followerId)
