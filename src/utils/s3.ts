@@ -1,4 +1,4 @@
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";    //Subir objeto e interactuar con cliente
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { Constants } from "./constants";
 import {v4 as uuidv4} from 'uuid';
@@ -16,7 +16,8 @@ const s3 = new S3Client(AWSconfig)
 const generateS3Url = async (filetype: string): Promise<{presignedUrl: string, filename: string}> =>{
     const filename = uuidv4()
     const command = new PutObjectCommand({
-        Bucket: process.env.BUCKET_NAME,
+        // Bucket: process.env.BUCKET_NAME,
+        Bucket: Constants.BUCKET_NAME,
         Key: `${filename}.${filetype}`,
         ContentType: filetype
     })

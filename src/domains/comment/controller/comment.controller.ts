@@ -57,18 +57,15 @@
  *
  */
 
-//Importa las dependencias necesarias de Express y otros modulos
 import { Request, Response, Router } from 'express'
 import HttpStatus from 'http-status'
 // express-async-errors is a module that handles async errors in express, don't forget import it in your new controllers
 
 import 'express-async-errors' // Importar el modulo que maneja errores asincronos en Express
 
-// Importa utilidades y repositorio
 import { db, BodyValidation } from '@utils'
 
 
-//Importa servicios y DTO
 import { FollowerRepoImpl } from '@domains/follower/repository'
 import { UserRepositoryImpl } from '@domains/user/repository'
 import { PostRepositoryImpl } from '@domains/post/repository'
@@ -117,6 +114,8 @@ const service: CommentService = new CommentServiceImpl(new CommentRepoImpl(db), 
  *
  */
 
+// Punto 7)
+//ENDPOINT - Obtener comentarios por ID de usuario
 commentRouter.get('/by_user/:userId', async(req:Request, res:Response)=>{
     const {userId} = res.locals.context
     const {userId: authorId} = req.params
@@ -165,6 +164,8 @@ commentRouter.get('/by_user/:userId', async(req:Request, res:Response)=>{
  *              example: Server error.
  */
 
+// Punto 6)
+// ENDPOINT - Crear un comentario en una publicacion
 commentRouter.post('/:postId', BodyValidation(CreatePostInputDTO), async(req: Request, res: Response)=>{
     const {userId} = res.locals.context
     const {postId} = req.params
@@ -212,6 +213,7 @@ commentRouter.post('/:postId', BodyValidation(CreatePostInputDTO), async(req: Re
  *              example: Server error.
  */
 
+// ENDPOINT - Eliminar un comentario por su ID
 commentRouter.delete('/:commentId', async(req:Request, res:Response)=>{
     const {userId} = res.locals.context
     const {commentId} = req.params
@@ -256,6 +258,8 @@ commentRouter.delete('/:commentId', async(req:Request, res:Response)=>{
  * }            example: Server error.
  */
 
+// Punto 10)
+// ENDPOINT - Obtener comentarios por ID de publicacion
 commentRouter.get('/:postId', async(req:Request,res:Response) => {
     const {userId} = res.locals.context
     const {postId} = req.params

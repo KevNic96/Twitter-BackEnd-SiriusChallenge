@@ -161,12 +161,17 @@ export class UserRepositoryImpl implements UserRepository {
   }
 
   async getProfilePicture(userId: string):Promise <string|null>{
+    try{
     const user = await this.db.user.findUnique({
       where: {
         id: userId
       }
     })
     return user?.profilePicture ?? null
+    }catch(error){
+      console.error("Error al llamar a findUnique: ", error);
+      throw error;
+    }
   }
 
 }

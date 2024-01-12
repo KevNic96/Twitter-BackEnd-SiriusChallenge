@@ -21,16 +21,20 @@ export const io = new Server(server, { // Creación de instancia del Servidor So
 })
 
 io.use((socket: Socket, next)=>{  //io.use para verificar el token proporcionado en la conexion del socket
-    const token = socket.handshake.query.token //Extra token de la consulta handshake
+    const token = socket.handshake.auth?.token || socket.handshake.headers?.token; //Extra token de la consulta handshake
 
     if(typeof token!=='string'){
+        
         next(new Error('INVALID_TOKEN')) 
         socket.disconnect()
         return   // Si la verificacion falla, se emite un error y se desconecta el socket
+        
+    //    return next(new Error('INVALID_TOKEN'));
     }
 
     jwt.verify(token, Constants.TOKEN_SECRET,(err, context)=>{
-        if(err!=null || context === undefined || typeof context ==='string'){
+        // if(err!=null || context === undefined || typeof context ==='string'){
+            if(err || !context || typeof context === 'string') {
             next(new Error('INVALID_TOKEN'))
             socket.disconnect()
         } else{
@@ -52,6 +56,29 @@ io.on('connection', async(socket:Socket)=>{ //El manejador de eventos se dispara
         } catch(err){
             Logger.error(err) //Se registra el error utilziando Logger.
         }
+
+        
+        socket.on('message', (message)=>{
+            console.log('Message received from server: ', message);
+        });
+
+        // setTimeout(()=>{
+            socket.emit('ToUser_message', 'toUser answer');
+        // }, 4000);
+        
+
+        /*
+        socket.on('private_message', async(data): Promise <void> =>{
+            if(!socket.userId) return;
+
+            try{
+                const message = await messageServ.newMessage(socket.userId, socket.userId, data.content)
+                io.to(socket.id).emit('message', message);
+            } catch(err){
+                Logger.error(err);
+            }
+        })
+        */
     })
 })
 

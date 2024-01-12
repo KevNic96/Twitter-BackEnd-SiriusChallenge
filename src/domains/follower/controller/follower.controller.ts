@@ -44,7 +44,6 @@ import 'express-async-errors'
 
 import { db } from '@utils'
 
-// import { FollowerRepoImpl } from '../repository'
 import { FollowerService} from '../service'
 import { FollowerServiceImpl } from '../service/follower.serviceImpl'
 import { UserRepositoryImpl } from '@domains/user/repository'
@@ -98,7 +97,7 @@ const service: FollowerService = new FollowerServiceImpl(new FollowerRepoImpl(db
  *                  example: Server error.
  */
 
-//Punto A)))
+//Punto 1)
 //Define dos rutas:
 followerRouter.post('/follow/:user_id',async(req: Request,res:Response)=>{ //La primera para seguir a un usuario
     const {userId} = res.locals.context;

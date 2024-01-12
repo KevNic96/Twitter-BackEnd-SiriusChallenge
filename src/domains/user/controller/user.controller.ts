@@ -83,7 +83,7 @@ userRouter.get('/', async (req: Request, res: Response) => {
 userRouter.get('/me', async (req: Request, res: Response) => {
   const { userId } = res.locals.context
 
-  const user = await service.getUser(userId)
+  const user = await service.getOwnUserView(userId)
 
   return res.status(HttpStatus.OK).json(user)
 })
@@ -143,6 +143,7 @@ userRouter.delete('/me', async(req: Request, res: Response) => {
  *              $ref: '#/components/responses/NotFoundException'
  */
 
+// Punto 13)
 userRouter.get('/:userId', async (req: Request, res: Response) => {
   const {userId} = req.params
   const { userId: otherLoggedUserId } = res.locals.context
@@ -177,6 +178,7 @@ userRouter.delete('/', async (req: Request, res: Response) => {
   return res.status(HttpStatus.OK).json({message: 'User deleted'})
 })
 
+// Punto 11)
 userRouter.get('/by_username/:username', async(req:Request, res: Response)=>{
   const {username} = req.params
   const {limit, skip} = req.query as Record<string, string>
@@ -214,6 +216,7 @@ userRouter.get('/by_username/:username', async(req:Request, res: Response)=>{
  *                  description: Privacy status
  */
 
+// Punto 2)
 userRouter.post('/private/:isPrivate', async(req:Request, res:Response) => {
   const {userId} = res.locals.context
   const {isPrivate} = req.params
@@ -252,6 +255,7 @@ userRouter.post('/private/:isPrivate', async(req:Request, res:Response) => {
  *              $ref: '#/components/responses/NotFoundException'
  */
 
+// Punto 8)
 userRouter.get('/profilePicture/presignedUrl', async(req:Request, res:Response) => {
   const {userId} = res.locals.context
   const {filetype} = req.query as Record<string, string>
@@ -272,6 +276,7 @@ userRouter.get('/profilePicture/presignedUrl', async(req:Request, res:Response) 
  *          description: OK. Return Profile's picture URL.
  */
 
+// Punto 8)
 userRouter.get('/profilePicture', async(req:Request, res: Response)=> {
   const {userId} = res.locals.context
   const profilePictureUrl = await service.getProfilePicture(userId)

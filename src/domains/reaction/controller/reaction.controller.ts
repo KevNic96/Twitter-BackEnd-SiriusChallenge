@@ -41,6 +41,7 @@ const service: ReactionService = new ReactionServiceImpl(new ReactionRepoImpl(db
  *                          $ref: '#/components/schemas/Reaction'
  */
 
+// Punto 5)
 reactionRouter.post('/:postId',ReactionTypeValidation, async(req:Request, res: Response) => {
     const {userId} = res.locals.context
     const {postId} = req.params
@@ -131,6 +132,7 @@ reactionRouter.delete('/:postId', ReactionTypeValidation, async(req:Request, res
  *              example: Server error.
  */
 
+// Punto 7)
 reactionRouter.get('/:userId', ReactionTypeValidation, async(req: Request, res: Response)=>{
     const {userId} = req.params
     const type: any = req.query.type

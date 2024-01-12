@@ -202,14 +202,6 @@ describe('UserService', () => {
 
   /////////////////
   test('setProfilePicture() should return a presignedUrl and a profilePictureUrl', async () => {
-    // jest.spyOn(userRepositoryMock, 'getById').mockImplementation(async () => await Promise.resolve(user))
-    // jest.spyOn(userRepositoryMock, 'setProfilePicture').mockImplementation(async () => {
-    //   await Promise.resolve()
-    // })
-    // const data = await userService.setProfilePicture(user.id, "url")
-
-    // expect(data.presignedUrl).toBeDefined()
-    // expect(data.profilePictureUrl).toBeDefined()
     const presigned = await s3Mock.createPresigned({Key: 'example.jpg'})
     expect(presigned.presignedUrl).toBeDefined()
     expect(presigned.profilePicture).toBeDefined()

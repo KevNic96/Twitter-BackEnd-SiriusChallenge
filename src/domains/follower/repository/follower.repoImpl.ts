@@ -31,7 +31,8 @@ export class FollowerRepoImpl implements FollowerRepo{ // Declara la clase que i
                 followedId
             }
         })
-        return follow!=null ? new FollowerDTO(follow):null //Retorna una instancia de 'FollowerDTO' si se encuentra la relacion de seguimiento, o 'null' si no se encuentra.
+        console.log(followerId, followedId)
+        return follow != null ? new FollowerDTO(follow):null //Retorna una instancia de 'FollowerDTO' si se encuentra la relacion de seguimiento, o 'null' si no se encuentra.
     }
 
     async getFollowers(userId: string): Promise <FollowerDTO[]>{ // Imaplementa el metodo 'GetFollowers' que toma el identificador 'userId' como argumento

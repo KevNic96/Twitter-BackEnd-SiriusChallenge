@@ -52,6 +52,7 @@ const service: PostService = new PostServiceImpl( new PostRepositoryImpl(db), ne
  *              $ref: '#/components/schemas/Post'
 */
 
+// Punto 12)
 postRouter.get('/', async (req: Request, res: Response) => {
   const { userId } = res.locals.context
   const { limit, before, after } = req.query as Record<string, string> // Obtenemos parámetros de consulta del objeto de solicitud
@@ -104,6 +105,7 @@ postRouter.get('/following', async(req:Request, res:Response) => {
  *        example: Server error.
  */
 
+// Punto 2 y 3)
 postRouter.get('/:postId', async (req: Request, res: Response) => {
   const { userId } = res.locals.context //Obtenemos userId del contexto
   const { postId } = req.params // Obtenemos postId de los parametros de solicitud
@@ -147,6 +149,7 @@ postRouter.get('/:postId', async (req: Request, res: Response) => {
  *        example: Server error.
  */
 
+// Punto 2 y 3)
 postRouter.get('/by_user/:userId', async (req: Request, res: Response) => {
   const { userId } = res.locals.context //Obtenemos userId del contexto
   const { userId: authorId } = req.params //Obtenemos el authorId de los parametros de solicitud

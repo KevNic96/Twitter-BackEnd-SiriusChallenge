@@ -23,7 +23,7 @@ export class PostServiceImpl implements PostService {
     await this.repository.delete(postId)
   }
 
-  //PUNTO B)))
+  //Punto 2)
   async getPost (userId: string, postId: string): Promise<ExtendedPostDTO> {
     // TODO PUBLIC PROFILE
     const post = await this.repository.getById(postId)
@@ -35,6 +35,7 @@ export class PostServiceImpl implements PostService {
     return post
   }
 
+  // Punto 2)
   async getLastPosts (userId: string, options: CursorPagination): Promise<ExtendedPostDTO[]> {
     // TODO: filter post search to return posts from authors that the user follows
     const posts = await this.repository.getAllByDatePaginated(options)
@@ -50,6 +51,7 @@ export class PostServiceImpl implements PostService {
     // return await this.repository.getAllByDatePaginated(options)
   }
 
+  // Punto 2)
   async getAuthorPosts (userId: any, authorId: string): Promise<ExtendedPostDTO[]> {
     // TODO: throw exception when the author has a private profile and the user doesn't follow them
     const author = await this.userRepo.getById(authorId)
