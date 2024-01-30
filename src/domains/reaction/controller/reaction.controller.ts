@@ -14,31 +14,27 @@ const service: ReactionService = new ReactionServiceImpl(new ReactionRepoImpl(db
 /**
  * @swagger
  * /api/reaction/:post_id:
- *  post:
- *      security:
- *          - bearer: []
- *      summary: Creates a reaction.
- *      tags: [Reaction]
- *      parameters:
- *          - in: path
- *            name: post_id
- *            schema:
- *              type: string
- *            required: true
- *            description: The post ID
- *      requestBody:
- *          required: true
- *          content:
- *              application/json:
- *                  schema:
- *                      $ref: '#/components/schemas/ReactionDTO'
- *      responses:
- *          200:
- *              description: OK. React to a post and returns info about the reaction.
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/Reaction'
+ *   post:
+ *     security:
+ *       - bearer: []
+ *     summary: Create reaction
+ *     tags: [Reaction]
+ *     parameters:
+ *       - in: path
+ *         name: post_id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The post id
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ReactionInput'
+ *     responses:
+ *       200:
+ *         description: OK
  */
 
 // Punto 5)
@@ -54,35 +50,27 @@ reactionRouter.post('/:postId',ReactionTypeValidation, async(req:Request, res: R
 /**
  * @swagger
  * /api/reaction/:post_id:
- *  delete:
- *      security:
- *          - bearer: []
- *      summary: Delete reaction
- *      tags: [Reaction]
- *      parameters:
- *          - in: path
- *            name: post_id
- *            schema:
- *              type: string
- *            required: true
- *            description: The post ID
- *      responses:
- *          200:
- *              description: OK. Reaction deLeted succesfully.
- *              content:
- *                  application/json:
- *                      example:
- *                          message: Deleted reaction {type} in post {postId}
- *          404:
- *              description: Reaction not found.
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/responses/NotFoundException'
- *          500:
- *              description: Some server errors.
- *              example: Server error.
- *          
+ *   delete:
+ *     security:
+ *       - bearer: []
+ *     summary: Delete reaction
+ *     tags: [Reaction]
+ *     parameters:
+ *       - in: path
+ *         name: post_id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The post id
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ReactionInput'
+ *     responses:
+ *       200:
+ *         description: OK
  */
 
 reactionRouter.delete('/:postId', ReactionTypeValidation, async(req:Request, res: Response) => {
@@ -96,40 +84,27 @@ reactionRouter.delete('/:postId', ReactionTypeValidation, async(req:Request, res
 /**
  * @swagger
  * /api/reaction/:user_id:
- *  get:
- *      security:
- *          - bearer: []
- *      summary: Get reactions by user and type
- *      tags: [Reaction]
- *      parameters:
- *          - in: path
- *            name: user_id
- *            schema:
- *              type: string
- *            required: true
- *            description: The post ID
- *          - in: query
- *            name: type
- *            schema:
- *              type: string
- *            required: true
- *            description: LIKE or RETWEET
- *      responses:
- *          200:
- *              description: OK. Return a list with the reactions
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/ReactionDTO'
- *          404:
- *              description: Reaction not found.
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/responses/NotFoundException
- *          500:
- *              description: Some server error.
- *              example: Server error.
+ *   get:
+ *     security:
+ *       - bearer: []
+ *     summary: Get reactions by user and type
+ *     tags: [Reaction]
+ *     parameters:
+ *       - in: path
+ *         name: user_id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The post id
+ *       - in: query
+ *         name: type
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The reaction type, should be LIKE or RETWEET
+ *     responses:
+ *       200:
+ *         description: OK
  */
 
 // Punto 7)

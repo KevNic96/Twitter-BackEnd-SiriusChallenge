@@ -18,23 +18,25 @@ const service : MessageService = new MessageServiceImpl(new MessageRepoImpl(db),
 /**
  * @swagger
  * /api/message/:receiver_id:
- *  post:
- *      security: Send messages
- *      tags: [Messages]
- *      parameters:
- *          - in: path
- *            name: receiver_id
- *            schema:
- *              type: string
- *            required: true
- *            description: The receiver id to send messages
- *      responses:
- *          200:
- *              description: OK
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/Message'
+ *   post:
+ *     security:
+ *       - bearer: []
+ *     summary: Send messages
+ *     tags: [Messages]
+ *     parameters:
+ *       - in: path
+ *         name: receiver_id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The receiver id to send messages
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Message'
  */
 
 messageRouter.post('/:to', async(req:Request, res:Response)=> {
@@ -47,7 +49,7 @@ messageRouter.post('/:to', async(req:Request, res:Response)=> {
     return res.status(HttpStatus.CREATED).json(message)
 })
 
-messageRouter.get('/chat:to', async(req:Request, res:Response)=>{
+messageRouter.get('/chat/:to', async(req:Request, res:Response)=>{
     const {userId} = res.locals.context
     const {to} = req.params
 
@@ -58,7 +60,6 @@ messageRouter.get('/chat:to', async(req:Request, res:Response)=>{
 
 messageRouter.get('/chat', async(req:Request, res:Response)=>{
     const {userId}=res.locals.context
-    
     const messages = await service.getChats(userId)
 
     return res.status(HttpStatus.OK).json(messages)

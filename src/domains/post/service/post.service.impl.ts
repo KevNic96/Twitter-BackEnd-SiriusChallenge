@@ -82,7 +82,7 @@ export class PostServiceImpl implements PostService {
   async setPostImage(filetype: string): Promise<{presignedUrl: string, fileUrl: string}>{
     const presignedData = await generateS3Url(filetype)
     const extension = filetype.split('/')[1]
-    const fileUrl = `https://${Constants.BUCKET_NAME}.s3.amaznaws.com/${presignedData.filename}.${extension}`
+    const fileUrl = `https://${Constants.BUCKET_NAME}.s3.amazonaws.com/${presignedData.filename}.${extension}`
     const data = {
       presignedUrl: presignedData.presignedUrl,
       fileUrl

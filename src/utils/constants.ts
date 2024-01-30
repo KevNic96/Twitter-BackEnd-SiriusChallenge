@@ -35,9 +35,9 @@ export class Constants {
 
   static BUCKET_REGION: string = process.env.BUCKET_REGION ?? 'sa-east-1'
 
-  static BUCKET_ACCESS_KEY_ID: string = process.env.BUCKET_ACCESS_KEY_ID ?? 'accessKeyId'
+  static BUCKET_ACCESS_KEY_ID: string = process.env.accessKeyId ?? 'accessKeyId'
 
-  static SECRET_ACCESS_KEY: string = process.env.SECRET_ACCESS_KEY ?? 'secretAccessKey'
+  static SECRET_ACCESS_KEY: string = process.env.secretAccessKey ?? 'secretAccessKey'
 
 }
 

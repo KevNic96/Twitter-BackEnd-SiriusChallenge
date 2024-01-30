@@ -1,5 +1,3 @@
-import { app } from '@server';
-import swaggerUi from 'swagger-ui-express'
 import swaggerJSDoc from 'swagger-jsdoc';
 
 const options = {
@@ -21,13 +19,11 @@ const options = {
         './src/domains/user/controller/*.ts',
         './src/domains/auth/controller/*.ts',
         './src/domains/post/controller/*.ts',
-        './src/domains/heath/controller/*.ts',
+        './src/domains/health/controller/*.ts',
         './src/domains/follower/controller/*.ts',
         './src/domains/reaction/controller/*.ts',
         './src/domains/comment/controller/*.ts',
     ]
 }
 
-const specs = swaggerJSDoc(options)
-
-app.use('/docs',swaggerUi.serve, swaggerUi.setup(specs))
+export const specs = swaggerJSDoc(options)

@@ -14,6 +14,7 @@ const AWSconfig = {
 const s3 = new S3Client(AWSconfig)
 
 const generateS3Url = async (filetype: string): Promise<{presignedUrl: string, filename: string}> =>{
+    console.log(AWSconfig);
     const filename = uuidv4()
     const command = new PutObjectCommand({
         // Bucket: process.env.BUCKET_NAME,

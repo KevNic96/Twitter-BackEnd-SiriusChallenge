@@ -17,7 +17,8 @@ export class MessageServiceImpl implements MessageService{
         const doesFollow = await this.followRepo.getById(userId,to)
         const doesFollowBack = await this.followRepo.getById(to, userId)
         if (!doesFollow || !doesFollowBack) throw new NotFoundException('Follow')
-        return await this.messageRepo.create({content, from: userId, to})
+        // return await this.messageRepo.create({content, from: userId, to})
+        return await this.messageRepo.create(userId,to, content)
     }
 
     async getChats (userId: string): Promise<UserViewDTO[]>{

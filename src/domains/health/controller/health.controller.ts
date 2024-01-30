@@ -8,16 +8,12 @@ export const healthRouter = Router()
 /**
  * @swagger
  * /api/health:
- *  get:
- *    summary: Server health
- *    tags: [Health]
- *    responses:
- *      200:
- *        description: The server is on.
- *        example: Server running.
- *      500:
- *        description: Some server error.
- *        example: Server error.
+ *   get:
+ *     summary: Health check
+ *     tags: [Health]
+ *     responses:
+ *       200:
+ *         description: OK
  */
 
 healthRouter.get('/', (req: Request, res: Response) => {

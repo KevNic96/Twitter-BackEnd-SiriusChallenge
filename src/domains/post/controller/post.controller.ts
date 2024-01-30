@@ -19,38 +19,38 @@ const service: PostService = new PostServiceImpl( new PostRepositoryImpl(db), ne
 /**
  * @swagger
  * /api/post:
- *  get:
- *    security:
- *      - bearer: []
- *    summary: Get the latest posts
- *    tags: [Post]
- *    parameters:
- *      - in: query
- *        name: limit
- *        schema:
- *          type: integer
- *        required: false
- *        description: Return the number of posts.
- *      - in: query
- *        name: before
- *        schema:
- *          type: string
- *        required: false
- *        description: Cursor Previous Page
- *      - in: query
- *        name: after
- *        schema:
- *          type: string
- *        required: false
- *        description: Cursor Next Page
- *    responses:
- *      200:
- *        description: OK
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/Post'
-*/
+ *   get:
+ *     security:
+ *       - bearer: []
+ *     summary: Get latest posts
+ *     tags: [Post]
+ *     parameters:
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         required: false
+ *         description: The number of posts to return
+ *       - in: query
+ *         name: before
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: The cursor to the previous page
+ *       - in: query
+ *         name: after
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: The cursor to the next page
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Post'
+ */
 
 // Punto 12)
 postRouter.get('/', async (req: Request, res: Response) => {
@@ -74,35 +74,25 @@ postRouter.get('/following', async(req:Request, res:Response) => {
 /**
  * @swagger
  * /api/post/:post_id:
- *  get:
- *    security:
- *      - bearer: []
- *    summary: Get post by id
- *    tags: [Post]
- *    parameters:
- *      - in: path
- *        name: post_id
- *        schema:
- *          type: string
- *        required: true
- *        description: The post id
- *    responses:
- *      200:
- *        description: OK. Returns the post requested.
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/Post'
- *      404:
- *        description: Post not found.
- *        example: Post not existing or if user doesn't follow post author.
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/responses/NotFoundException'
- *      500:
- *        description: Some server error.
- *        example: Server error.
+ *   get:
+ *     security:
+ *       - bearer: []
+ *     summary: Get post by id
+ *     tags: [Post]
+ *     parameters:
+ *       - in: path
+ *         name: post_id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The post id
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Post'
  */
 
 // Punto 2 y 3)
@@ -118,35 +108,25 @@ postRouter.get('/:postId', async (req: Request, res: Response) => {
 /**
  * @swagger
  * /api/post/by_user/:user_id:
- *  get:
- *    security:
- *     - bearer: []
- *    summary: Get Posts by Author
- *    tags: [Post]
- *    parameters:
- *      - in: path
- *        name: user_id
- *        schema:
- *          type: string
- *        requried: true
- *        description: The author id
- *    respnoses:
- *      200:
- *        description: OK
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/Post'
- *     404:
- *        description: Post not found.
- *        example: The author has a private profile and the user doesn't follow them
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/responses/NotFoundException'
- *     500:
- *        description: Some server error
- *        example: Server error.
+ *   get:
+ *     security:
+ *       - bearer: []
+ *     summary: Get posts by author
+ *     tags: [Post]
+ *     parameters:
+ *       - in: path
+ *         name: user_id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The author id
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Post'
  */
 
 // Punto 2 y 3)
@@ -162,35 +142,24 @@ postRouter.get('/by_user/:userId', async (req: Request, res: Response) => {
 /**
  * @swagger
  * /api/post:
- *  post:
- *    security:
- *      - bearer: []
- *    summary: Create a post
- *    tags: [Post]
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            $ref: '#/components/schemas/CreatePostInput'
- *    responses:
- *      201:
- *        description: The post was succesfully created
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/Post'
- *      400:
- *        description: Invalid request body.
- *      401:
- *        description: User must be logged to execute that action.
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/responses/UnauthorizedException'
- *      500:
- *        description: Some server error.
- *        example: Server error.
+ *   post:
+ *     security:
+ *       - bearer: []
+ *     summary: Create post
+ *     tags: [Post]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreatePostInput'
+ *     responses:
+ *       201:
+ *         description: The post was successfully created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Post'
  */
 
 postRouter.post('/', BodyValidation(CreatePostInputDTO), async (req: Request, res: Response) => {
@@ -205,40 +174,25 @@ postRouter.post('/', BodyValidation(CreatePostInputDTO), async (req: Request, re
 /**
  * @swagger
  * /api/post/:post_id:
- *  delete:
- *    security:
- *      - bearer: []
- *    summary: Delete a post by id
- *    tags: [Post]
- *    parameters:
- *      - in: path
- *        name: post_id
- *        schema:
- *          type: string
- *        required: true
- *        description: The post ID
- *    responses:
- *      200:
- *        description: The post was succesfully deleted.
- *        content:
- *          application/json:
- *            example:
- *              message: Deleted post {post_id}
- *      404:
- *        description: Post ID not found.
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/responses/NotFoundException'
- *      403:
- *        description: You can only delete your posts
- *        content:
- *          application/json:
- *            schema:
- *            $ref: '#/components/responses/ForbiddenException'
- *      500:
- *        description: Some server error.
- *        example: Server error.
+ *   delete:
+ *     security:
+ *       - bearer: []
+ *     summary: Delete post
+ *     tags: [Post]
+ *     parameters:
+ *       - in: path
+ *         name: post_id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The post id
+ *     responses:
+ *       200:
+ *         description: The post was successfully deleted
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Deleted post {post_id}
  */
 
 postRouter.delete('/:postId', async (req: Request, res: Response) => {
